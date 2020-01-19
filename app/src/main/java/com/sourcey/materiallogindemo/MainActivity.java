@@ -5,17 +5,51 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+
+    private boolean login_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        GlobalVariable gv = (GlobalVariable) getApplicationContext();
+        login_token = gv.getLoginToken();
+        if (login_token != true) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
-        Intent intent = new Intent(this, LoginActivity.class);
+    }
+
+    public void regulations(View view) {
+    }
+
+    public void bulletin(View view) {
+    }
+
+    public void statistics(View view) {
+    }
+
+    public void servicejob(View view) {
+    }
+
+    public void specialship(View view) {
+    }
+
+    public void learning(View view) {
+    }
+
+    public void commonship(View view) {
+        Intent intent=new Intent(MainActivity.this,CommonshipActivity.class);
+        startActivity(intent);
+    }
+
+    public void reset(View view) {
+        Intent intent=new Intent(MainActivity.this,ResetActivity.class);
         startActivity(intent);
     }
 
@@ -34,10 +68,14 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.logout) {
+            GlobalVariable gv = (GlobalVariable) getApplicationContext();
+            gv.setLoginToken(false);
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
