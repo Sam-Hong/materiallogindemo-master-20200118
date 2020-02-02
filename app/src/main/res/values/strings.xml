@@ -16,6 +16,7 @@
     <string name="reset">變更密碼</string>
 
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>
+    <string name="feature_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/features/by/parent</string>
     <string name="regulations_api_url">not_found_yet</string>
     <string name="bulletin_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/bulletin/list</string>
     <string name="statistics_api_url">not_found_yet</string>

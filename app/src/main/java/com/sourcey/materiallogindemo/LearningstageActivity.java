@@ -3,7 +3,6 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonshipActivity extends AppCompatActivity {
+public class LearningstageActivity extends AppCompatActivity {
 
     String authorization;
     RequestQueue requestQueue;
@@ -36,22 +35,37 @@ public class CommonshipActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview_layout);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
-        PostHttpRequest(); //將Data寫入listview的程式碼放在此函數內，否則會有Callback時間差的問題，原因在於listener
+        PostHttpRequest();
     }
 
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CommonshipActivity.this, WebViewActivity.class);
-            intent.putExtra("url", urlList.get(position));
-            startActivity(intent);
+            if(position==0){
+                Intent intent = new Intent(LearningstageActivity.this, LearningfeatureActivity.class);
+                intent.putExtra("parentId", "14");
+                startActivity(intent);
+            } else if (position==1){
+                Intent intent = new Intent(LearningstageActivity.this, LearningfeatureActivity.class);
+                intent.putExtra("parentId", "15");
+                startActivity(intent);
+            } else if (position==2){
+                Intent intent = new Intent(LearningstageActivity.this, LearningfeatureActivity.class);
+                intent.putExtra("parentId", "16");
+                startActivity(intent);
+            } else if (position==3){
+                Intent intent = new Intent(LearningstageActivity.this, LearningfeatureActivity.class);
+                intent.putExtra("parentId", "18");
+                startActivity(intent);
+            } else if (position==4){
+
+            }
         }
 
     };
@@ -59,18 +73,17 @@ public class CommonshipActivity extends AppCompatActivity {
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("view", "0");
+            json.put("parentId", "13");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.commonship_api_url);
+        String url = getResources().getString(R.string.feature_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                            Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONArray array = response.getJSONArray("data");
@@ -150,5 +163,4 @@ public class CommonshipActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

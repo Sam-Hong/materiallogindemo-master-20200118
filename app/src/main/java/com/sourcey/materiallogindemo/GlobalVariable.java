@@ -7,15 +7,15 @@ public class GlobalVariable extends Application {
     private static String Authorization;
 
     public void setAuthorization(String authorization) {
-        this.Authorization = authorization;
+        Authorization = authorization;
     }
 
     public String getAuthorization() {
         return Authorization;
     }
 
-    public void setLoginToken(boolean LoginToken) {
-        this.LoginToken = LoginToken;
+    public void setLoginToken(boolean Logintoken) {
+        LoginToken = Logintoken;
     }
 
     public boolean getLoginToken() {

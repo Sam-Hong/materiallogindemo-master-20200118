@@ -35,12 +35,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void servicejob(View view) {
+        Intent intent=new Intent(MainActivity.this,ServicejobActivity.class);
+        startActivity(intent);
     }
 
     public void specialship(View view) {
     }
 
     public void learning(View view) {
+        Intent intent=new Intent(MainActivity.this,LearningstageActivity.class);
+        startActivity(intent);
     }
 
     public void commonship(View view) {

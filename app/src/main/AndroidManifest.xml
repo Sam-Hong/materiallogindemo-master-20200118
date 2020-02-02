@@ -10,7 +10,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".LearningfeatureActivity"></activity>
+        <activity android:name=".LearningstageActivity" />
+        <activity android:name=".ServicejobActivity" />
+        <activity android:name=".WebViewActivity" />
         <activity android:name=".CommonshipActivity" />
         <activity
             android:name=".ResetActivity"

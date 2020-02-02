@@ -3,7 +3,6 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommonshipActivity extends AppCompatActivity {
+public class ServicejobActivity extends AppCompatActivity {
 
     String authorization;
     RequestQueue requestQueue;
@@ -36,20 +35,19 @@ public class CommonshipActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview_layout);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
-        PostHttpRequest(); //將Data寫入listview的程式碼放在此函數內，否則會有Callback時間差的問題，原因在於listener
+        PostHttpRequest();
     }
 
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(CommonshipActivity.this, WebViewActivity.class);
+            Intent intent = new Intent(ServicejobActivity.this, WebViewActivity.class);
             intent.putExtra("url", urlList.get(position));
             startActivity(intent);
         }
@@ -59,27 +57,27 @@ public class CommonshipActivity extends AppCompatActivity {
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("view", "0");
+            json.put("opt", "0");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.commonship_api_url);
+        String url = getResources().getString(R.string.servicejob_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                            Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
-                                    JSONArray array = response.getJSONArray("data");
+                                    JSONObject data = response.getJSONObject("data");
+                                    JSONArray array = data.getJSONArray("jobSops");
                                     int i;
                                     for (i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("name");
-                                        String url = jsonObject.getString("url");
+                                        String name = jsonObject.getString("content");
+                                        String url = jsonObject.getString("filePath");
                                         idList.add(id);
                                         nameList.add(name);
                                         urlList.add(url);
@@ -150,5 +148,4 @@ public class CommonshipActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
