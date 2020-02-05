@@ -77,10 +77,10 @@ public class ServicejobActivity extends AppCompatActivity {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
                                         String name = jsonObject.getString("content");
-                                        String url = jsonObject.getString("filePath");
+                                        String url = "https://www.cga.gov.tw" + jsonObject.getString("filePath");
                                         idList.add(id);
                                         nameList.add(name);
-                                        urlList.add(url);
+                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
                                     }
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);

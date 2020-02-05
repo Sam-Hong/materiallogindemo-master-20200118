@@ -86,7 +86,6 @@ public class LearningfeatureActivity extends AppCompatActivity {
                                         String url = jsonObject.getString("url");
                                         if (url.contains("https")) {
                                             String[] temp = url.split("\"");
-                                            Log.e("filepath", "onResponse: " + temp[1]);
                                             url = temp[1];
                                         }
                                         idList.add(id);

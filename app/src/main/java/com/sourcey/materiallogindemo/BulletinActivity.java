@@ -82,11 +82,10 @@ public class BulletinActivity extends AppCompatActivity {
                                         String name = jsonObject.getString("title");
                                         JSONArray filePath = jsonObject.getJSONArray("files");
                                         JSONObject path = filePath.getJSONObject(0);
-                                        String url = "http://www.cga.gov.tw/" + path.getString("filePath");
-                                        Log.e("filepath", "onResponse: " + i + url);
+                                        String url = "https://www.cga.gov.tw" + path.getString("filePath");
                                         idList.add(id);
                                         nameList.add(name);
-                                        urlList.add(url);
+                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
                                     }
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);

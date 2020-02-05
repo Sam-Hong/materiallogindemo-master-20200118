@@ -15,9 +15,10 @@
 
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>
     <string name="feature_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/features/by/parent</string>
-    <string name="regulations_api_url">not_found_yet</string>
+    <string name="regulations_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/regulations/list</string>
     <string name="bulletin_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/bulletin/list</string>
-    <string name="statistics_api_url">not_found_yet</string>
+    <string name="statistics_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/by/id</string>
+    <string name="statisticsMenus_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/menus</string>
     <string name="servicejob_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/service/job/sop</string>
     <string name="specialship_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/special/ship/list</string>
     <string name="learning_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/materials/list</string>
