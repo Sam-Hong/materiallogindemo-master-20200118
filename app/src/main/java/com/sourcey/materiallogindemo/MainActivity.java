@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void bulletin(View view) {
+        Intent intent=new Intent(MainActivity.this,BulletinActivity.class);
+        startActivity(intent);
     }
 
     public void statistics(View view) {
