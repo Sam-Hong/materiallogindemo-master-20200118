@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void regulations(View view) {
+
     }
 
     public void bulletin(View view) {

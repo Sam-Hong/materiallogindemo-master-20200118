@@ -3,11 +3,15 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,52 +28,91 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LearningfeatureActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity {
+    TextView tv;
+    Button submitbutton, quitbutton;
+    RadioGroup radio_g;
+    RadioButton rb1,rb2,rb3,rb4;
+    TextView progress;
 
     String authorization;
     RequestQueue requestQueue;
-    static final String REQ_TAG = "VACTIVITY";
-    ArrayList<String> idList = new ArrayList<String>();
-    ArrayList<String> nameList = new ArrayList<String>();
-    ArrayList<String> urlList = new ArrayList<String>();
-    int parentID;
+    ArrayList<String> questionsList = new ArrayList<String>();
+    ArrayList<String> optList = new ArrayList<String>();
+    ArrayList<String> answersList = new ArrayList<String>();
 
+    int flag=0;
+    public static int marks=0,correct=0,wrong=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview_layout);
+        setContentView(R.layout.activity_question);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
-        Intent intent = getIntent();
-        try {
-            parentID = Integer.parseInt(intent.getStringExtra("parentId"));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+        submitbutton=(Button)findViewById(R.id.button3);
+        tv=(TextView) findViewById(R.id.tvque);
+        progress=(TextView)findViewById(R.id.progress);
+        progress.setText("1");
+
+        radio_g=(RadioGroup)findViewById(R.id.answersgrp);
+        rb1=(RadioButton)findViewById(R.id.radioButton);
+        rb2=(RadioButton)findViewById(R.id.radioButton2);
+        rb3=(RadioButton)findViewById(R.id.radioButton3);
+        rb4=(RadioButton)findViewById(R.id.radioButton4);
 
         PostHttpRequest();
-    }
 
-    private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
-            intent.putExtra("url", urlList.get(position));
-            intent.putExtra("time_to_quiz", "3000");
-            startActivity(intent);
-        }
-    };
+        submitbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(radio_g.getCheckedRadioButtonId()==-1)
+                {
+                    Toast.makeText(getApplicationContext(), "Please select one choice", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                RadioButton uans = (RadioButton) findViewById(radio_g.getCheckedRadioButtonId());
+                String ansText = uans.getText().toString();
+//                Toast.makeText(getApplicationContext(), ansText, Toast.LENGTH_SHORT).show();
+                if(ansText.equals(optList.get(flag*4+Integer.parseInt(answersList.get(flag))))) {
+                    correct++;
+//                    Toast.makeText(getApplicationContext(), "Correct", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    wrong++;
+//                    Toast.makeText(getApplicationContext(), "Wrong", Toast.LENGTH_SHORT).show();
+                }
+
+                flag++;
+                progress.setText(Integer.toString(flag+1));
+                if(flag<questionsList.size())
+                {
+                    tv.setText(questionsList.get(flag));
+                    rb1.setText(optList.get(flag*4));
+                    rb2.setText(optList.get(flag*4+1));
+                    rb3.setText(optList.get(flag*4+2));
+                    rb4.setText(optList.get(flag*4+3));
+                }
+                else
+                {
+                    marks=correct;
+                    Intent in = new Intent(getApplicationContext(),ResultActivity.class);
+                    startActivity(in);
+                }
+                radio_g.clearCheck();
+            }
+        });
+    }
 
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("parentId", parentID);
+            json.put("materialId", "1");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.learning_api_url);
+        String url = getResources().getString(R.string.question_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -82,20 +125,24 @@ public class LearningfeatureActivity extends AppCompatActivity {
                                     int i;
                                     for (i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
-                                        String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("name");
-                                        String url = jsonObject.getString("url");
-                                        idList.add(id);
-                                        nameList.add(name);
-                                        urlList.add(url);
+                                        String questionText = jsonObject.getString("questionText");
+                                        String answer1 = jsonObject.getString("answer1");
+                                        String answer2 = jsonObject.getString("answer2");
+                                        String answer3 = jsonObject.getString("answer3");
+                                        String answer4 = jsonObject.getString("answer4");
+                                        String correctAnswerIndex = jsonObject.getString("correctAnswerIndex");
+                                        questionsList.add(questionText);
+                                        optList.add(answer1);
+                                        optList.add(answer2);
+                                        optList.add(answer3);
+                                        optList.add(answer4);
+                                        answersList.add(correctAnswerIndex);
                                     }
-                                    //找到ListView
-                                    ListView list = (ListView) findViewById(R.id.listview);
-                                    //建立Adapter，並將要顯示的結果陣列傳入
-                                    WordAdapter adapter = new WordAdapter(nameList);
-                                    //將Adapter設定給ListView
-                                    list.setAdapter(adapter);
-                                    list.setOnItemClickListener(onClickListView);
+                                    tv.setText(questionsList.get(0));
+                                    rb1.setText(optList.get(0));
+                                    rb2.setText(optList.get(1));
+                                    rb3.setText(optList.get(2));
+                                    rb4.setText(optList.get(3));
                                 } catch (Exception e) {
                                     Toast.makeText(getBaseContext(), "response error", Toast.LENGTH_LONG).show();
                                 }
@@ -122,7 +169,6 @@ public class LearningfeatureActivity extends AppCompatActivity {
                 return headers;
             }
         };
-        jsonObjectRequest.setTag(REQ_TAG);
         requestQueue.add(jsonObjectRequest);
     }
 

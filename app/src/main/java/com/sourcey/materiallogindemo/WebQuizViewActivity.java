@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,19 +14,32 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebQuizViewActivity extends AppCompatActivity {
 
     String url;
+    int time_to_quiz;
+    Button start_quiz;
 
     @SuppressLint("SetJavaScriptEnabled")
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_view);
+        setContentView(R.layout.activity_web_quiz_view);
 
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
+        time_to_quiz = Integer.parseInt(intent.getStringExtra("time_to_quiz"));
+
+        start_quiz = (Button) findViewById(R.id.start_quiz);
+        setButtonTimer(time_to_quiz);
+        start_quiz.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(WebQuizViewActivity.this,QuestionActivity.class);
+                startActivity(intent);
+            }
+        });
 
         WebView myWebView = (WebView) findViewById(R.id.web_view);
         myWebView.getSettings().setJavaScriptEnabled(true);
@@ -33,6 +47,18 @@ public class WebViewActivity extends AppCompatActivity {
         myWebView.setWebViewClient(new WebViewClient());
 //        setContentView(myWebView);
         myWebView.loadUrl(url);
+    }
+
+    public void setButtonTimer(int time){
+        start_quiz.setVisibility(View.INVISIBLE);
+        new CountDownTimer(time, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+            @Override
+            public void onFinish() {
+                start_quiz.setVisibility(View.VISIBLE);
+            }
+        }.start();
     }
 
     @Override

@@ -1,38 +1,50 @@
 package com.sourcey.materiallogindemo;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class WebViewActivity extends AppCompatActivity {
-
-    String url;
-
-    @SuppressLint("SetJavaScriptEnabled")
+public class ResultActivity extends AppCompatActivity {
+    TextView tv, tv2;
+    Button btnRestart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_view);
+        setContentView(R.layout.activity_result);
 
-        Intent intent = getIntent();
-        url = intent.getStringExtra("url");
+        tv = (TextView)findViewById(R.id.tvres);
+        tv2 = (TextView)findViewById(R.id.tvres2);
+        btnRestart = (Button) findViewById(R.id.btnRestart);
 
-        WebView myWebView = (WebView) findViewById(R.id.web_view);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        myWebView.setWebViewClient(new WebViewClient());
-//        setContentView(myWebView);
-        myWebView.loadUrl(url);
+        StringBuffer sb = new StringBuffer();
+        sb.append("您在10題中答對了 " + QuestionActivity.correct + "題！");
+        StringBuffer sb2 = new StringBuffer();
+        if (QuestionActivity.correct>=7){
+            sb2.append("恭喜您通過測驗！");
+        } else {
+            sb2.append("分數未達指定標準，請重新學習教材再行測驗！");
+        }
+
+        tv.setText(sb);
+        tv2.setText(sb2);
+
+        QuestionActivity.correct=0;
+        QuestionActivity.wrong=0;
+
+        btnRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getApplicationContext(),MainActivity.class);
+                in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(in);
+            }
+        });
     }
 
     @Override
@@ -64,5 +76,4 @@ public class WebViewActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
