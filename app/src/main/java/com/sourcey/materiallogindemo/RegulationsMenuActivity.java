@@ -3,7 +3,6 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LearningfeatureActivity extends AppCompatActivity {
+public class RegulationsMenuActivity extends AppCompatActivity {
 
     String authorization;
     RequestQueue requestQueue;
@@ -33,7 +32,6 @@ public class LearningfeatureActivity extends AppCompatActivity {
     ArrayList<String> idList = new ArrayList<String>();
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
-    int parentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,34 +41,37 @@ public class LearningfeatureActivity extends AppCompatActivity {
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
-        Intent intent = getIntent();
-        try {
-            parentID = Integer.parseInt(intent.getStringExtra("parentId"));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
         PostHttpRequest();
     }
 
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
-            intent.putExtra("url", urlList.get(position));
-            intent.putExtra("time_to_quiz", "3000");
-            startActivity(intent);
+            if(position==0){
+                Intent intent = new Intent(RegulationsMenuActivity.this, RegulationsFeaturesActivity.class);
+                intent.putExtra("lawClass", "2");
+                startActivity(intent);
+            } else if (position==1){
+                Intent intent = new Intent(RegulationsMenuActivity.this, RegulationsFeaturesActivity.class);
+                intent.putExtra("lawClass", "3");
+                startActivity(intent);
+            } else if (position==2){
+                Intent intent = new Intent(RegulationsMenuActivity.this, RegulationsFeaturesActivity.class);
+                intent.putExtra("lawClass", "4");
+                startActivity(intent);
+            }
         }
+
     };
 
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("parentId", parentID);
+            json.put("parentId", "1");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.learning_api_url);
+        String url = getResources().getString(R.string.feature_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -80,15 +81,12 @@ public class LearningfeatureActivity extends AppCompatActivity {
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONArray array = response.getJSONArray("data");
-                                    for (int i = 0; i < array.length(); i++) {
+                                    int i;
+                                    for (i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
                                         String name = jsonObject.getString("name");
                                         String url = jsonObject.getString("url");
-                                        if (url.contains("https")) {
-                                            String[] temp = url.split("\"");
-                                            url = temp[1];
-                                        }
                                         idList.add(id);
                                         nameList.add(name);
                                         urlList.add(url);

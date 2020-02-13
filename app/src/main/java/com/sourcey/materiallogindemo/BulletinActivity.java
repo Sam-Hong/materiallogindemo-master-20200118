@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LearningfeatureActivity extends AppCompatActivity {
+public class BulletinActivity extends AppCompatActivity {
 
     String authorization;
     RequestQueue requestQueue;
@@ -33,65 +33,59 @@ public class LearningfeatureActivity extends AppCompatActivity {
     ArrayList<String> idList = new ArrayList<String>();
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
-    int parentID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview_layout);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
 
-        Intent intent = getIntent();
-        try {
-            parentID = Integer.parseInt(intent.getStringExtra("parentId"));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        PostHttpRequest();
+        PostHttpRequest(); //將Data寫入listview的程式碼放在此函數內，否則會有Callback時間差的問題，原因在於listener
     }
 
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
+            Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
             intent.putExtra("url", urlList.get(position));
-            intent.putExtra("time_to_quiz", "3000");
             startActivity(intent);
         }
+
     };
 
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("parentId", parentID);
+            json.put("page", "1");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.learning_api_url);
+        String url = getResources().getString(R.string.bulletin_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
+                           // Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
-                                    JSONArray array = response.getJSONArray("data");
-                                    for (int i = 0; i < array.length(); i++) {
+                                    JSONObject data = response.getJSONObject("data");
+                                    JSONArray array = data.getJSONArray("bulletins");
+                                    int i;
+                                    for (i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("name");
-                                        String url = jsonObject.getString("url");
-                                        if (url.contains("https")) {
-                                            String[] temp = url.split("\"");
-                                            url = temp[1];
-                                        }
+                                        String name = jsonObject.getString("title");
+                                        JSONArray filePath = jsonObject.getJSONArray("files");
+                                        JSONObject path = filePath.getJSONObject(0);
+                                        String url = "https://www.cga.gov.tw" + path.getString("filePath");
                                         idList.add(id);
                                         nameList.add(name);
-                                        urlList.add(url);
+                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
                                     }
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);
