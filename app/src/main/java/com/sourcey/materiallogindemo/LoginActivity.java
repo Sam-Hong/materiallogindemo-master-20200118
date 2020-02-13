@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String identification = _identificationText.getText().toString();
+        final String identification = _identificationText.getText().toString();
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
@@ -121,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                                     authorization = response.getJSONObject("data").getString("accessToken");
                                     GlobalVariable gv = (GlobalVariable) getApplicationContext();
                                     gv.setAuthorization(authorization);
+                                    gv.setIdentification(identification);
                                     loginOrNot = true;
                                 } catch (Exception e) {
                                     loginOrNot = false;
