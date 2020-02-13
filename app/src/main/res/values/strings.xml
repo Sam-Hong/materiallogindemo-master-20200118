@@ -12,13 +12,23 @@
     <string name="learning">數位學習</string>
     <string name="commonship">常見船舶</string>
     <string name="reset">變更密碼</string>
+    <string name="organization">組織</string>
+    <string name="affairs">內政</string>
+    <string name="deal">處務</string>
+    <string name="download">檔案下載</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
 
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>
     <string name="feature_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/features/by/parent</string>
     <string name="regulations_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/regulations/list</string>
+    //{"lawClass" : "2", "lawType" : "1"}
     <string name="bulletin_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/bulletin/list</string>
     <string name="statistics_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/by/id</string>
+    //{"id" : "unitId"}
     <string name="statisticsMenus_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/menus</string>
+    //{"parentId" : "8755"}
     <string name="servicejob_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/service/job/sop</string>
     <string name="specialship_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/special/ship/list</string>
     <string name="learning_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/materials/list</string>

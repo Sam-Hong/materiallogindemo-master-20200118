@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void regulations(View view) {
+        Intent intent=new Intent(MainActivity.this,RegulationsMenuActivity.class);
+        startActivity(intent);
     }
 
     public void bulletin(View view) {
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void statistics(View view) {
+        Intent intent=new Intent(MainActivity.this,statisticsMenuActivity.class);
+        startActivity(intent);
     }
 
     public void servicejob(View view) {
