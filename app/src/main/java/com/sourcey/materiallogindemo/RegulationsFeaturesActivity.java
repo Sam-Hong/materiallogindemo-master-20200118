@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -39,8 +40,8 @@ public class RegulationsFeaturesActivity extends AppCompatActivity implements Co
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
     ArrayList<JSONObject> dataList = new ArrayList<JSONObject>();
-    int lawClass, lawType, page;
-    int pageTotal;
+    int lawClass, lawType, page, temp;
+    ArrayList<String> pageTotal = new ArrayList<String>();
 
 
     @Override
@@ -180,6 +181,18 @@ public class RegulationsFeaturesActivity extends AppCompatActivity implements Co
         }
     }
 
+    public View.OnClickListener onButtonClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Button next = findViewById(R.id.nextPage);
+            Button prev = findViewById(R.id.prevPage);
+            //switch (v.getId())
+            // case ()
+
+
+        }
+    };
+
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -233,6 +246,7 @@ public class RegulationsFeaturesActivity extends AppCompatActivity implements Co
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONObject data = response.getJSONObject("data");
+                                    pageTotal.add(data.get("totalPage").toString());
                                     JSONArray lawArray = data.getJSONArray("laws");
                                     for (int i = 0; i < lawArray.length(); i++) {
                                         JSONObject jsonObject = lawArray.getJSONObject(i);
@@ -250,6 +264,10 @@ public class RegulationsFeaturesActivity extends AppCompatActivity implements Co
                                     //將Adapter設定給ListView
                                     list.setAdapter(adapter);
                                     list.setOnItemClickListener(onClickListView);
+
+                                    getPageTotal(pageTotal);
+                                    Log.e("pages", "onResponse: " + pageTotal);
+
                                 } catch (Exception e) {
                                     Toast.makeText(getBaseContext(), "response error", Toast.LENGTH_LONG).show();
                                 }
@@ -278,6 +296,18 @@ public class RegulationsFeaturesActivity extends AppCompatActivity implements Co
         };
         jsonObjectRequest.setTag(REQ_TAG);
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getPageTotal(ArrayList<String> pageTotal) {
+        Log.e("pages", "getPageTotal: " + pageTotal );
+        int pages = Integer.parseInt(pageTotal.get(0));
+        if (pages > 1) {
+            Button prev = findViewById(R.id.prevPage);
+            Button next = findViewById(R.id.nextPage);
+            next.setOnClickListener(onButtonClick);
+            prev.setOnClickListener(onButtonClick);
+        }
+
     }
 
     @Override

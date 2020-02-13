@@ -15,6 +15,11 @@
         <activity android:name=".RegulationsFeaturesActivity" />
         <activity android:name=".RegulationsMenuActivity" />
         <activity android:name=".BulletinActivity" />
+        <activity android:name=".WebQuizViewActivity"></activity>
+        <activity android:name=".ResultActivity" />
+        <activity
+            android:name=".QuestionActivity"
+            android:label="@string/quiz" />
         <activity android:name=".LearningfeatureActivity" />
         <activity android:name=".LearningstageActivity" />
         <activity android:name=".ServicejobActivity" />

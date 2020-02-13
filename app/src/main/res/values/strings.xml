@@ -34,4 +34,9 @@
     <string name="learning_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/materials/list</string>
     <string name="commonship_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/common/ship/list</string>
     <string name="reset_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/password/reset</string>
+    <string name="question_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/questions/list</string>
+    <string name="save_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/save</string>
+
+    <string name="start_quiz">開始學後評量</string>
+    <string name="quiz">學後評量</string>
 </resources>

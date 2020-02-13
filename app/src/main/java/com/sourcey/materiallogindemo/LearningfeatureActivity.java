@@ -56,8 +56,9 @@ public class LearningfeatureActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(LearningfeatureActivity.this, WebViewActivity.class);
+            Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
             intent.putExtra("url", urlList.get(position));
+            intent.putExtra("time_to_quiz", "3000");
             startActivity(intent);
         }
     };
