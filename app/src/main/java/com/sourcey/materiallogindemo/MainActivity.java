@@ -3,6 +3,7 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void statistics(View view) {
         Intent intent=new Intent(MainActivity.this,statisticsMenuActivity.class);
+        intent.putExtra("id", "8755");
         startActivity(intent);
     }
 

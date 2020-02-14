@@ -10,12 +10,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".statisticsMenuActivity"></activity>
+        <activity android:name=".statisticsPageActivity"></activity>
+        <activity android:name=".statisticsMenuActivity" />
         <activity android:name=".RegulationsPageActivity" />
         <activity android:name=".RegulationsFeaturesActivity" />
         <activity android:name=".RegulationsMenuActivity" />
         <activity android:name=".BulletinActivity" />
-        <activity android:name=".WebQuizViewActivity"></activity>
+        <activity android:name=".WebQuizViewActivity" />
         <activity android:name=".ResultActivity" />
         <activity
             android:name=".QuestionActivity"
