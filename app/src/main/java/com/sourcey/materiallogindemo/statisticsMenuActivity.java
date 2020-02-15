@@ -87,8 +87,7 @@ public class statisticsMenuActivity extends AppCompatActivity {
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONArray array = response.getJSONArray("data");
-                                    int i;
-                                    for (i = 0; i < array.length(); i++) {
+                                    for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
                                         String name = jsonObject.getString("name");

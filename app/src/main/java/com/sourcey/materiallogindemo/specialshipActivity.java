@@ -1,15 +1,17 @@
 package com.sourcey.materiallogindemo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,37 +26,55 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
-public class BulletinActivity extends AppCompatActivity {
+public class specialshipActivity extends AppCompatActivity {
 
     String authorization, pageTotal;
     RequestQueue requestQueue;
+    Context context;
     static final String REQ_TAG = "VACTIVITY";
-    ArrayList<String> idList = new ArrayList<String>();
-    ArrayList<String> nameList = new ArrayList<String>();
-    ArrayList<String> urlList = new ArrayList<String>();
+    List<String> idList = new ArrayList<String>();
+    //List<String> nameList = new ArrayList<String>();
+    //List<String> statusList = new ArrayList<String>();
+    HashMap<String, List<String>> listChild;
     int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview_layout);
+        setContentView(R.layout.specialship_layout);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
-        Button next = findViewById(R.id.nextPage);
-        Button prev = findViewById(R.id.prevPage);
-
-        next.setVisibility(View.VISIBLE);
-        next.setEnabled(true);
-        next.setOnClickListener(onClickButton);
-        prev.setOnClickListener(onClickButton);
-
-        PostHttpRequest(); //將Data寫入listview的程式碼放在此函數內，否則會有Callback時間差的問題，原因在於listener
+        context = this;
+        PostHttpRequest(false,0 );
+        SearchView numberSearchView = findViewById(R.id.numberSearch);
+        numberSearchView.setOnQueryTextListener(onQueryListener);
     }
+
+    public SearchView.OnQueryTextListener onQueryListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            int ship = Integer.parseInt(query);
+            idList.clear();
+            //nameList.clear();
+         //   statusList.clear();
+            PostHttpRequest(true, ship);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    };
 
     public View.OnClickListener onClickButton = new View.OnClickListener() {
         @Override
@@ -80,10 +100,10 @@ public class BulletinActivity extends AppCompatActivity {
                         }
                         page++;
                         idList.clear();
-                        nameList.clear();
-                        urlList.clear();
+                       // nameList.clear();
+                     //   statusList.clear();
 
-                        PostHttpRequest();
+                        PostHttpRequest(false, 0);
                     }
                     break;
 
@@ -102,12 +122,11 @@ public class BulletinActivity extends AppCompatActivity {
                         }
                         page--;
                         idList.clear();
-                        nameList.clear();
-                        urlList.clear();
+                       // nameList.clear();
+                       // statusList.clear();
 
-                        PostHttpRequest();
+                        PostHttpRequest(false,0);
                     }
-
                     break;
 
                 default:
@@ -116,59 +135,75 @@ public class BulletinActivity extends AppCompatActivity {
         }
     };
 
-    private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
-            intent.putExtra("url", urlList.get(position));
-            startActivity(intent);
-        }
-
-    };
-
-    private void PostHttpRequest() {
+    private void PostHttpRequest(Boolean Search , int shipNum) {
         JSONObject json = new JSONObject();
         try {
-            json.put("page", page);
+            json.put("page", "1");
+            if (Search)
+                json.put("number" , shipNum);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.bulletin_api_url);
+        String url = getResources().getString(R.string.specialship_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                           // Log.e("here", response.toString());
+                            // Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONObject data = response.getJSONObject("data");
                                     pageTotal = data.getString("totalPage");
-                                    JSONArray array = data.getJSONArray("bulletins");
+                                    JSONArray array = data.getJSONArray("ships");
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
-                                        String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("title");
-                                        JSONArray filePath = jsonObject.getJSONArray("files");
-                                        JSONObject path = filePath.getJSONObject(0);
-                                        String url = "https://www.cga.gov.tw" + path.getString("filePath");
+                                        String id = jsonObject.getString("number");
+                                        String name = jsonObject.getString("name");
+                                        String status = jsonObject.getString("howToDo");
+                                        List<String> child = new ArrayList<String>();
+                                        child.add(name);
+                                        child.add(status);
                                         idList.add(id);
-                                        nameList.add(name);
-                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
+                                        listChild.put(id,child);
+                                      //  nameList.add(name);
+                                      //  statusList.add(status);
                                     }
-                                    //找到ListView
-                                    ListView list = (ListView) findViewById(R.id.listview);
-                                    //建立Adapter，並將要顯示的結果陣列傳入
-                                    WordAdapter adapter = new WordAdapter(nameList);
-                                    //將Adapter設定給ListView
-                                    list.setAdapter(adapter);
-                                    list.setOnItemClickListener(onClickListView);
 
-                                    TextView pageNumber = findViewById(R.id.pageNumber);
-                                    pageNumber.setVisibility(View.VISIBLE);
-                                    String temp = page + "/" + pageTotal;
-                                    pageNumber.setText(temp);
+                                    Button next = findViewById(R.id.nextPage);
+                                    Button prev = findViewById(R.id.prevPage);
+                                    if (!pageTotal.equals("1")) {
+                                        TextView pageNumber = findViewById(R.id.pageNumber);
+                                        pageNumber.setVisibility(View.VISIBLE);
+                                        String temp = page + "/" + pageTotal;
+                                        pageNumber.setText(temp);
+                                    }
+                                    if (pageTotal.equals("1"))
+                                    {
+                                        prev.setVisibility(View.INVISIBLE);
+                                        prev.setEnabled(false);
+                                        next.setVisibility(View.INVISIBLE);
+                                        next.setEnabled(false);
+                                    }
+                                    else if (page == 1){
+                                        prev.setVisibility(View.INVISIBLE);
+                                        prev.setEnabled(false);
+                                        next.setEnabled(true);
+                                    }
+                                    else if (pageTotal.equals(Integer.toString(page)))
+                                    {
+                                        next.setVisibility(View.INVISIBLE);
+                                        next.setEnabled(false);
+                                        prev.setEnabled(true);
+                                    }
+
+                                    prev.setOnClickListener(onClickButton);
+                                    next.setOnClickListener(onClickButton);
+
+                                    specialAdapter listAdapter = new specialAdapter(context, idList, listChild);
+                                    ExpandableListView expListView = findViewById(R.id.ImoList);
+                                    expListView.setAdapter(listAdapter);
 
                                 } catch (Exception e) {
                                     Toast.makeText(getBaseContext(), "response error", Toast.LENGTH_LONG).show();

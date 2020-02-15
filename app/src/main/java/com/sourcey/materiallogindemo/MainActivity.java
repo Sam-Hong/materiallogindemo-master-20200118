@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
     }
 
     public void regulations(View view) {
@@ -48,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void specialship(View view) {
+        Intent intent=new Intent(MainActivity.this,specialshipActivity.class);
+        startActivity(intent);
     }
 
     public void learning(View view) {
