@@ -8,6 +8,7 @@
         android:id="@+id/group_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textColor="@color/white"
         android:textSize="24sp" />
 

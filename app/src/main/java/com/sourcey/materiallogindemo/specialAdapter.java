@@ -1,5 +1,6 @@
 package com.sourcey.materiallogindemo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,22 +13,21 @@ import android.widget.TextView;
 
 public class specialAdapter extends BaseExpandableListAdapter {
 
-    Context contextView;
-    private List<String> listDataHeader; // header titles
+    private Context contextView;
+    private ArrayList<String> listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<String>> listDataChild;
+    private ArrayList<ArrayList<String>> listDataChild;
 
-    public specialAdapter(Context context, List<String> listDataHeader,
-                          HashMap<String, List<String>> listChildData) {
+    public specialAdapter(Context context, ArrayList<String> listDataHeader,
+                          ArrayList<ArrayList<String>> listChildData) {
         this.contextView = context;
         this.listDataHeader = listDataHeader;
         this.listDataChild = listChildData;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
-        return this.listDataChild.get(this.listDataHeader.get(groupPosition))
-                .get(childPosititon);
+    public Object getChild(int groupPosition, int childPosition) {
+        return this.listDataChild.get(groupPosition).get(childPosition);
     }
 
     @Override
@@ -44,11 +44,11 @@ public class specialAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.contextView
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.basic_list_item, null);
+            convertView = layoutInflater.inflate(R.layout.group_child_item, null);
         }
 
         TextView txtListChild = convertView
-                .findViewById(R.id.title);
+                .findViewById(R.id.childItem);
 
         txtListChild.setText(childText);
         return convertView;
@@ -56,8 +56,7 @@ public class specialAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.listDataChild.get(this.listDataHeader.get(groupPosition))
-                .size();
+        return this.listDataChild.get(groupPosition).size();
     }
 
     @Override
@@ -85,8 +84,7 @@ public class specialAdapter extends BaseExpandableListAdapter {
             convertView = layoutInflater.inflate(R.layout.group_list_item, null);
         }
 
-        TextView lblListHeader = convertView
-                .findViewById(R.id.group_title);
+        TextView lblListHeader = convertView.findViewById(R.id.group_title);
         lblListHeader.setText(headerTitle);
 
         return convertView;
@@ -99,6 +97,6 @@ public class specialAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 }

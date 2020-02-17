@@ -2,7 +2,6 @@ package com.sourcey.materiallogindemo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,11 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 public class specialshipActivity extends AppCompatActivity {
@@ -39,10 +36,8 @@ public class specialshipActivity extends AppCompatActivity {
     RequestQueue requestQueue;
     Context context;
     static final String REQ_TAG = "VACTIVITY";
-    List<String> idList = new ArrayList<String>();
-    //List<String> nameList = new ArrayList<String>();
-    //List<String> statusList = new ArrayList<String>();
-    HashMap<String, List<String>> listChild;
+    ArrayList<String> idList = new ArrayList<String>();
+    ArrayList<ArrayList<String>> listChild = new ArrayList<ArrayList<String>>();
     int page = 1;
 
     @Override
@@ -54,24 +49,38 @@ public class specialshipActivity extends AppCompatActivity {
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
         context = this;
-        PostHttpRequest(false,0 );
-        SearchView numberSearchView = findViewById(R.id.numberSearch);
+
+        final SearchView numberSearchView = findViewById(R.id.numberSearch);
+        numberSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                numberSearchView.setIconified(false);
+            }
+        });
         numberSearchView.setOnQueryTextListener(onQueryListener);
+
+        PostHttpRequest(false, 0);
     }
 
     public SearchView.OnQueryTextListener onQueryListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            int ship = Integer.parseInt(query);
-            idList.clear();
-            //nameList.clear();
-         //   statusList.clear();
-            PostHttpRequest(true, ship);
-            return true;
+            try {
+                if (query.length() == 7) {
+                    int ship = Integer.parseInt(query);
+                    PostHttpRequest(true, ship);
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(getBaseContext(), "Number error", Toast.LENGTH_LONG).show();
+            }
+
+            return false;
         }
 
         @Override
         public boolean onQueryTextChange(String newText) {
+            if (newText.isEmpty())
+                PostHttpRequest(false, 0);
             return false;
         }
     };
@@ -99,9 +108,6 @@ public class specialshipActivity extends AppCompatActivity {
                             next.setEnabled(false);
                         }
                         page++;
-                        idList.clear();
-                       // nameList.clear();
-                     //   statusList.clear();
 
                         PostHttpRequest(false, 0);
                     }
@@ -121,9 +127,6 @@ public class specialshipActivity extends AppCompatActivity {
                             prev.setEnabled(false);
                         }
                         page--;
-                        idList.clear();
-                       // nameList.clear();
-                       // statusList.clear();
 
                         PostHttpRequest(false,0);
                     }
@@ -138,7 +141,7 @@ public class specialshipActivity extends AppCompatActivity {
     private void PostHttpRequest(Boolean Search , int shipNum) {
         JSONObject json = new JSONObject();
         try {
-            json.put("page", "1");
+            json.put("page", page);
             if (Search)
                 json.put("number" , shipNum);
         } catch (JSONException e) {
@@ -151,28 +154,35 @@ public class specialshipActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                            // Log.e("here", response.toString());
+                             //Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
+                                    if (!idList.isEmpty() && !listChild.isEmpty())
+                                    {
+                                        idList.clear();
+                                        listChild.clear();
+                                    }
                                     JSONObject data = response.getJSONObject("data");
-                                    pageTotal = data.getString("totalPage");
+                                    pageTotal = data.get("totalPage").toString();
                                     JSONArray array = data.getJSONArray("ships");
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("number");
                                         String name = jsonObject.getString("name");
                                         String status = jsonObject.getString("howToDo");
-                                        List<String> child = new ArrayList<String>();
+                                        ArrayList<String> child = new ArrayList<String>();
+
+                                        idList.add(id);
                                         child.add(name);
                                         child.add(status);
-                                        idList.add(id);
-                                        listChild.put(id,child);
-                                      //  nameList.add(name);
-                                      //  statusList.add(status);
+                                        listChild.add(child);
+
                                     }
+                                    Log.e("data", "onResponse: " + idList);
 
                                     Button next = findViewById(R.id.nextPage);
                                     Button prev = findViewById(R.id.prevPage);
+
                                     if (!pageTotal.equals("1")) {
                                         TextView pageNumber = findViewById(R.id.pageNumber);
                                         pageNumber.setVisibility(View.VISIBLE);
