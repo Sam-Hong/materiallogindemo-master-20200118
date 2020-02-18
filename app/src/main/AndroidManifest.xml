@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".specialshipActivity"></activity>
         <activity android:name=".statisticsPageActivity" />
+        <activity android:name=".ImageViewActivity"></activity>
         <activity android:name=".statisticsMenuActivity" />
         <activity android:name=".RegulationsPageActivity" />
         <activity android:name=".RegulationsFeaturesActivity" />

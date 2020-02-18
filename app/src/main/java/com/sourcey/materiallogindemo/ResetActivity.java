@@ -51,7 +51,6 @@ public class ResetActivity extends AppCompatActivity {
                 .getRequestQueue();
 
         _ChangePasswordButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 edit();

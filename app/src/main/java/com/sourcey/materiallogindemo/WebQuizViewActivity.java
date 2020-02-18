@@ -18,6 +18,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
 
     String url;
     int time_to_quiz;
+    String materialId;
     Button start_quiz;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -30,6 +31,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         time_to_quiz = Integer.parseInt(intent.getStringExtra("time_to_quiz"));
+        materialId=intent.getStringExtra("materialId");
 
         start_quiz = (Button) findViewById(R.id.start_quiz);
         setButtonTimer(time_to_quiz);
@@ -37,6 +39,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(WebQuizViewActivity.this,QuestionActivity.class);
+                intent.putExtra("materialId",materialId);
                 startActivity(intent);
             }
         });

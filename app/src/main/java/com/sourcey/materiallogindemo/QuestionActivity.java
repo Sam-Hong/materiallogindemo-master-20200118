@@ -30,12 +30,14 @@ import java.util.Map;
 
 public class QuestionActivity extends AppCompatActivity {
     TextView tv;
-    Button submitbutton, quitbutton;
+    Button submitbutton;
     RadioGroup radio_g;
     RadioButton rb1,rb2,rb3,rb4;
     TextView progress;
+    int materialId;
 
     String authorization;
+    String identification;
     RequestQueue requestQueue;
     ArrayList<String> questionsList = new ArrayList<String>();
     ArrayList<String> optList = new ArrayList<String>();
@@ -47,6 +49,9 @@ public class QuestionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
+        Intent intent = getIntent();
+        materialId=Integer.parseInt(intent.getStringExtra("materialId"));
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
@@ -86,18 +91,16 @@ public class QuestionActivity extends AppCompatActivity {
 
                 flag++;
                 progress.setText(Integer.toString(flag+1));
-                if(flag<questionsList.size())
-                {
+                if(flag<questionsList.size()) {
                     tv.setText(questionsList.get(flag));
                     rb1.setText(optList.get(flag*4));
                     rb2.setText(optList.get(flag*4+1));
                     rb3.setText(optList.get(flag*4+2));
                     rb4.setText(optList.get(flag*4+3));
-                }
-                else
-                {
+                } else {
                     marks=correct;
                     Intent in = new Intent(getApplicationContext(),ResultActivity.class);
+                    in.putExtra("materialId",Integer.toString(materialId));
                     startActivity(in);
                 }
                 radio_g.clearCheck();
@@ -108,7 +111,7 @@ public class QuestionActivity extends AppCompatActivity {
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("materialId", "1");
+            json.put("materialId", materialId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
