@@ -139,8 +139,8 @@ public class LoginActivity extends AppCompatActivity {
 //                serverResp.setText("Error getting response");
             }
         });
-        /*CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-        CookieHandler.setDefault(cookieManager);*/
+        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        CookieHandler.setDefault(cookieManager);
         jsonObjectRequest.setTag(REQ_TAG);
         requestQueue.add(jsonObjectRequest);
 
