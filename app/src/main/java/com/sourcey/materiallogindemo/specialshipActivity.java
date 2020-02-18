@@ -1,16 +1,16 @@
 package com.sourcey.materiallogindemo;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,42 +25,65 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class BulletinActivity extends AppCompatActivity {
+public class specialshipActivity extends AppCompatActivity {
 
     String authorization, pageTotal;
     RequestQueue requestQueue;
+    Context context;
     static final String REQ_TAG = "VACTIVITY";
     ArrayList<String> idList = new ArrayList<String>();
-    ArrayList<String> nameList = new ArrayList<String>();
-    ArrayList<String> urlList = new ArrayList<String>();
-
-    Hashtable<String, ArrayList<String>> fileTable = new Hashtable<String, ArrayList<String>>();
+    ArrayList<ArrayList<String>> listChild = new ArrayList<ArrayList<String>>();
     int page = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview_layout);
+        setContentView(R.layout.specialship_layout);
 
         requestQueue = RequestQueueSingleton.getInstance(this.getApplicationContext())
                 .getRequestQueue();
-        Button next = findViewById(R.id.nextPage);
-        Button prev = findViewById(R.id.prevPage);
+        context = this;
 
-        next.setVisibility(View.VISIBLE);
-        next.setEnabled(true);
-        next.setOnClickListener(onClickButton);
-        prev.setOnClickListener(onClickButton);
+        final SearchView numberSearchView = findViewById(R.id.numberSearch);
+        numberSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                numberSearchView.setIconified(false);
+            }
+        });
+        numberSearchView.setOnQueryTextListener(onQueryListener);
 
-        PostHttpRequest(); //將Data寫入listview的程式碼放在此函數內，否則會有Callback時間差的問題，原因在於listener
+        PostHttpRequest(false, 0);
     }
+
+    public SearchView.OnQueryTextListener onQueryListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            try {
+                if (query.length() == 7) {
+                    int ship = Integer.parseInt(query);
+                    PostHttpRequest(true, ship);
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(getBaseContext(), "Number error", Toast.LENGTH_LONG).show();
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            if (newText.isEmpty())
+                PostHttpRequest(false, 0);
+            return false;
+        }
+    };
 
     public View.OnClickListener onClickButton = new View.OnClickListener() {
         @Override
@@ -85,11 +108,8 @@ public class BulletinActivity extends AppCompatActivity {
                             next.setEnabled(false);
                         }
                         page++;
-                        idList.clear();
-                        nameList.clear();
-                        urlList.clear();
 
-                        PostHttpRequest();
+                        PostHttpRequest(false, 0);
                     }
                     break;
 
@@ -107,13 +127,9 @@ public class BulletinActivity extends AppCompatActivity {
                             prev.setEnabled(false);
                         }
                         page--;
-                        idList.clear();
-                        nameList.clear();
-                        urlList.clear();
 
-                        PostHttpRequest();
+                        PostHttpRequest(false,0);
                     }
-
                     break;
 
                 default:
@@ -122,104 +138,81 @@ public class BulletinActivity extends AppCompatActivity {
         }
     };
 
-    private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (urlList.get(position).equals("none"))
-                Toast.makeText(getBaseContext(), "No PDF file", Toast.LENGTH_LONG).show();
-            else if (urlList.get(position).equals("multi"))
-            {
-                Bundle multiLinks = new Bundle();
-                String[] temp = new String[]{"none"};
-
-                multiLinks.putString("name", nameList.get(position));
-                multiLinks.putStringArrayList("files", fileTable.get(nameList.get(position)));
-                multiLinks.putStringArray("history",temp);
-                Intent intent = new Intent(BulletinActivity.this, RegulationsPageActivity.class);
-                intent.putExtra("data", multiLinks);
-                startActivity(intent);
-
-            }
-            else
-            {
-                Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
-                intent.putExtra("url", urlList.get(position));
-                startActivity(intent);
-            }
-
-        }
-
-    };
-
-    private void PostHttpRequest() {
+    private void PostHttpRequest(Boolean Search , int shipNum) {
         JSONObject json = new JSONObject();
         try {
             json.put("page", page);
+            if (Search)
+                json.put("number" , shipNum);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.bulletin_api_url);
+        String url = getResources().getString(R.string.specialship_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                           // Log.e("here", response.toString());
+                             //Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
+                                    if (!idList.isEmpty() && !listChild.isEmpty())
+                                    {
+                                        idList.clear();
+                                        listChild.clear();
+                                    }
                                     JSONObject data = response.getJSONObject("data");
-                                    pageTotal = data.getString("totalPage");
-                                    JSONArray array = data.getJSONArray("bulletins");
-
+                                    pageTotal = data.get("totalPage").toString();
+                                    JSONArray array = data.getJSONArray("ships");
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
-                                        String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("title");
-                                        JSONArray filePath = jsonObject.getJSONArray("files");
-                                        String url;
-                                        if (!filePath.isNull(0) && filePath.length() == 1) {
-                                            JSONObject path = filePath.getJSONObject(0);
+                                        String id = jsonObject.getString("number");
+                                        String name = jsonObject.getString("name");
+                                        String status = jsonObject.getString("howToDo");
+                                        ArrayList<String> child = new ArrayList<String>();
 
-                                            url = "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + path.getString("filePath");
-                                        }
-                                        else {
-                                            url = "none";
-                                            if (filePath.length() > 1) {
-                                                ArrayList<String> moreFiles = new ArrayList<String>();
-                                                for(int x = 0; x < filePath.length();x++)
-                                                {
-                                                    JSONObject temp = filePath.getJSONObject(x);
-                                                    if (!temp.getString("filePath").contains(".doc")) {
-                                                        if (temp.getString("name").contains(".pdf"))
-                                                            moreFiles.add(temp.getString("name"));
-                                                        else
-                                                            moreFiles.add(temp.getString("name") + ".pdf");
-                                                        moreFiles.add(temp.getString("filePath"));
-                                                        url = "multi";
-                                                    }
-                                                }
-                                                if (!moreFiles.isEmpty())
-                                                    fileTable.put(name,moreFiles);
-                                            }
-                                        }
                                         idList.add(id);
-                                        nameList.add(name);
-                                        urlList.add(url);
+                                        child.add(name);
+                                        child.add(status);
+                                        listChild.add(child);
+
                                     }
 
-                                    //找到ListView
-                                    ListView list = (ListView) findViewById(R.id.listview);
-                                    //建立Adapter，並將要顯示的結果陣列傳入
-                                    WordAdapter adapter = new WordAdapter(nameList);
-                                    //將Adapter設定給ListView
-                                    list.setAdapter(adapter);
-                                    list.setOnItemClickListener(onClickListView);
+                                    Button next = findViewById(R.id.nextPage);
+                                    Button prev = findViewById(R.id.prevPage);
 
-                                    TextView pageNumber = findViewById(R.id.pageNumber);
-                                    pageNumber.setVisibility(View.VISIBLE);
-                                    String temp = page + "/" + pageTotal;
-                                    pageNumber.setText(temp);
+                                    if (!pageTotal.equals("1")) {
+                                        TextView pageNumber = findViewById(R.id.pageNumber);
+                                        pageNumber.setVisibility(View.VISIBLE);
+                                        String temp = page + "/" + pageTotal;
+                                        pageNumber.setText(temp);
+                                    }
+                                    if (pageTotal.equals("1"))
+                                    {
+                                        prev.setVisibility(View.INVISIBLE);
+                                        prev.setEnabled(false);
+                                        next.setVisibility(View.INVISIBLE);
+                                        next.setEnabled(false);
+                                    }
+                                    else if (page == 1){
+                                        prev.setVisibility(View.INVISIBLE);
+                                        prev.setEnabled(false);
+                                        next.setEnabled(true);
+                                    }
+                                    else if (pageTotal.equals(Integer.toString(page)))
+                                    {
+                                        next.setVisibility(View.INVISIBLE);
+                                        next.setEnabled(false);
+                                        prev.setEnabled(true);
+                                    }
+
+                                    prev.setOnClickListener(onClickButton);
+                                    next.setOnClickListener(onClickButton);
+
+                                    specialAdapter listAdapter = new specialAdapter(context, idList, listChild);
+                                    ExpandableListView expListView = findViewById(R.id.ImoList);
+                                    expListView.setAdapter(listAdapter);
 
                                 } catch (Exception e) {
                                     Toast.makeText(getBaseContext(), "response error", Toast.LENGTH_LONG).show();

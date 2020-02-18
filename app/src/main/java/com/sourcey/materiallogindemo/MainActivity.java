@@ -3,6 +3,7 @@ package com.sourcey.materiallogindemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
     }
 
     public void regulations(View view) {
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void statistics(View view) {
         Intent intent=new Intent(MainActivity.this,statisticsMenuActivity.class);
+        intent.putExtra("id", "8755");
         startActivity(intent);
     }
 
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void specialship(View view) {
+        Intent intent=new Intent(MainActivity.this,specialshipActivity.class);
+        startActivity(intent);
     }
 
     public void learning(View view) {
