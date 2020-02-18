@@ -196,13 +196,11 @@ public class BulletinActivity extends AppCompatActivity {
                                                         else
                                                             moreFiles.add(temp.getString("name") + ".pdf");
                                                         moreFiles.add(temp.getString("filePath"));
-                                                        Log.e("added to files", "onResponse: " + temp.getString("name") + " = "+ temp.getString("filePath") + "\n");
                                                         url = "multi";
                                                     }
                                                 }
                                                 if (!moreFiles.isEmpty())
                                                     fileTable.put(name,moreFiles);
-                                                Log.e("multi links", "onResponse: " + name );
                                             }
                                         }
                                         idList.add(id);
