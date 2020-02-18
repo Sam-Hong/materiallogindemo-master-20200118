@@ -70,7 +70,7 @@ public class CommonshipActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 //                        serverResp.setText("String Response : "+ response.toString());
                         try {
-                            Log.e("here", response.toString());
+                            //Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONArray array = response.getJSONArray("data");

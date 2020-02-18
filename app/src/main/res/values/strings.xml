@@ -23,12 +23,9 @@
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>
     <string name="feature_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/features/by/parent</string>
     <string name="regulations_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/regulations/list</string>
-    //{"lawClass" : "2", "lawType" : "1"}
     <string name="bulletin_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/bulletin/list</string>
     <string name="statistics_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/by/id</string>
-    //{"id" : "unitId"}
     <string name="statisticsMenus_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/statistics/menus</string>
-    //{"parentId" : "8755"}
     <string name="servicejob_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/service/job/sop</string>
     <string name="specialship_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/special/ship/list</string>
     <string name="learning_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/materials/list</string>
@@ -36,6 +33,8 @@
     <string name="reset_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/password/reset</string>
     <string name="question_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/questions/list</string>
     <string name="save_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/save</string>
+    <string name="imo">IMO碼</string>
+    <string name="imo_hint">IMO編號</string>
 
     <string name="start_quiz">開始學後評量</string>
     <string name="quiz">學後評量</string>

@@ -51,7 +51,7 @@ public class RegulationsPageActivity extends AppCompatActivity {
         if (files != null)
         {
             for (int x = 0; x < files.size(); x++) {
-                if (files.get(x).contains(".pdf")){
+                if (files.get(x).contains(".pdf") && !files.get(x).contains("GipOpen")){
                     firstView.add(files.get(x));
                     url.add("http://docs.google.com/gview?embedded=true&url=http://www.cga.gov.tw" + files.get(x + 1));
                 }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class statisticsMenuActivity extends AppCompatActivity {
+public class statisticsPageActivity extends AppCompatActivity {
 
     String authorization;
     RequestQueue requestQueue;
@@ -33,8 +33,9 @@ public class statisticsMenuActivity extends AppCompatActivity {
     ArrayList<String> idList = new ArrayList<String>();
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
-    ArrayList<String> otherUrl = new ArrayList<String>();
-    String parentId = "8755";
+    ArrayList<String> moreFiles = new ArrayList<String>();
+
+    String parentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,30 +54,34 @@ public class statisticsMenuActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-            if (urlList.get(position).equals("0"))
-            {
-                Intent intent = new Intent(statisticsMenuActivity.this, statisticsMenuActivity.class);
-                intent.putExtra("id", otherUrl.get(position));
+            if(urlList.get(position).equals("more files")) {
+                Bundle data = new Bundle();
+                String[] extra = new String[1];
+                extra[0] = "none";
+                data.putString("name", nameList.get(position));
+                data.putStringArrayList("files", moreFiles);
+                data.putStringArray("history", extra);
+                Intent intent = new Intent(statisticsPageActivity.this, RegulationsPageActivity.class);
+                intent.putExtra("data", data);
                 startActivity(intent);
             }
-            else {
-                Intent intent = new Intent(statisticsMenuActivity.this, statisticsPageActivity.class);
-                intent.putExtra("id", urlList.get(position));
+            else if (!urlList.get(position).equals("none"))
+            {
+                Intent intent = new Intent(statisticsPageActivity.this, WebViewActivity.class);
+                intent.putExtra("url", urlList.get(position));
                 startActivity(intent);
             }
         }
-
     };
 
     private void PostHttpRequest() {
         JSONObject json = new JSONObject();
         try {
-            json.put("parentId", parentId);
+            json.put("id", parentId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String url = getResources().getString(R.string.statisticsMenus_api_url);
+        String url = getResources().getString(R.string.statistics_api_url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -87,18 +92,26 @@ public class statisticsMenuActivity extends AppCompatActivity {
                             if (response.getString("data").length() > 0) {
                                 try {
                                     JSONArray array = response.getJSONArray("data");
+                                    //Log.e("json", "onResponse: " + response.getString("data") );
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
+                                        String type = jsonObject.getString("showType");
                                         String id = jsonObject.getString("id");
-                                        String name = jsonObject.getString("name");
-                                        String url = jsonObject.getString("unitId");
-                                        String other;
-                                        if (jsonObject.getString("unitId").equals("0")) {
-                                            other = jsonObject.getString("id");
-                                            otherUrl.add(other);
+                                        String name = jsonObject.getString("title");
+                                        String url;
+                                        if (type.equals("3"))
+                                            url= "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + jsonObject.getString("filePath");
+                                        else if (type.equals("2"))
+                                            url = "none";
+                                        else {
+                                            url = "more files";
+                                            JSONArray other = jsonObject.getJSONArray("files");
+                                            for (int x = 0; x < other.length(); x++) {
+                                                JSONObject data = other.getJSONObject(x);
+                                                moreFiles.add(data.getString("name") + ".pdf");
+                                                moreFiles.add(data.getString("filePath"));
+                                            }
                                         }
-                                        else
-                                            otherUrl.add(url);
 
                                         idList.add(id);
                                         nameList.add(name);
