@@ -1,6 +1,7 @@
 package com.sourcey.materiallogindemo;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +25,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
 public class BulletinActivity extends AppCompatActivity {
 
@@ -35,6 +39,8 @@ public class BulletinActivity extends AppCompatActivity {
     ArrayList<String> idList = new ArrayList<String>();
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
+
+    Hashtable<String, ArrayList<String>> fileTable = new Hashtable<String, ArrayList<String>>();
     int page = 1;
 
     @Override
@@ -119,13 +125,28 @@ public class BulletinActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!urlList.get(position).equals("none")) {
+            if (urlList.get(position).equals("none"))
+                Toast.makeText(getBaseContext(), "No PDF file", Toast.LENGTH_LONG).show();
+            else if (urlList.get(position).equals("multi"))
+            {
+                Bundle multiLinks = new Bundle();
+                String[] temp = new String[]{"none"};
+
+                multiLinks.putString("name", nameList.get(position));
+                multiLinks.putStringArrayList("files", fileTable.get(nameList.get(position)));
+                multiLinks.putStringArray("history",temp);
+                Intent intent = new Intent(BulletinActivity.this, RegulationsPageActivity.class);
+                intent.putExtra("data", multiLinks);
+                startActivity(intent);
+
+            }
+            else
+            {
                 Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
                 startActivity(intent);
             }
-            else
-                Toast.makeText(getBaseContext(), "No PDF file", Toast.LENGTH_LONG).show();
+
         }
 
     };
@@ -150,6 +171,7 @@ public class BulletinActivity extends AppCompatActivity {
                                     JSONObject data = response.getJSONObject("data");
                                     pageTotal = data.getString("totalPage");
                                     JSONArray array = data.getJSONArray("bulletins");
+
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("id");
@@ -158,14 +180,36 @@ public class BulletinActivity extends AppCompatActivity {
                                         String url;
                                         if (!filePath.isNull(0) && filePath.length() == 1) {
                                             JSONObject path = filePath.getJSONObject(0);
+
                                             url = "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + path.getString("filePath");
                                         }
-                                        else
+                                        else {
                                             url = "none";
+                                            if (filePath.length() > 1) {
+                                                ArrayList<String> moreFiles = new ArrayList<String>();
+                                                for(int x = 0; x < filePath.length();x++)
+                                                {
+                                                    JSONObject temp = filePath.getJSONObject(x);
+                                                    if (!temp.getString("filePath").contains(".doc")) {
+                                                        if (temp.getString("name").contains(".pdf"))
+                                                            moreFiles.add(temp.getString("name"));
+                                                        else
+                                                            moreFiles.add(temp.getString("name") + ".pdf");
+                                                        moreFiles.add(temp.getString("filePath"));
+                                                        Log.e("added to files", "onResponse: " + temp.getString("name") + " = "+ temp.getString("filePath") + "\n");
+                                                        url = "multi";
+                                                    }
+                                                }
+                                                if (!moreFiles.isEmpty())
+                                                    fileTable.put(name,moreFiles);
+                                                Log.e("multi links", "onResponse: " + name );
+                                            }
+                                        }
                                         idList.add(id);
                                         nameList.add(name);
                                         urlList.add(url);
                                     }
+
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);
                                     //建立Adapter，並將要顯示的結果陣列傳入
