@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login fail", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "登入失敗", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
@@ -195,14 +195,14 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (identification.isEmpty()) { // || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _identificationText.setError("enter a valid identification");
+            _identificationText.setError("您所輸入的身分證字號錯誤");
             valid = false;
         } else {
             _identificationText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 3 || password.length() > 10) {
-            _passwordText.setError("between 3 and 10 alphanumeric characters");
+            _passwordText.setError("您所輸入的密碼錯誤");
             valid = false;
         } else {
             _passwordText.setError(null);

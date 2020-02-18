@@ -16,8 +16,8 @@
     <string name="affairs">內政</string>
     <string name="deal">處務</string>
     <string name="download">檔案下載</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="next">下一頁</string>
+    <string name="previous">上一頁</string>
 
 
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>

@@ -74,7 +74,7 @@ public class QuestionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(radio_g.getCheckedRadioButtonId()==-1)
                 {
-                    Toast.makeText(getApplicationContext(), "Please select one choice", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "請選擇一個選項", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 RadioButton uans = (RadioButton) findViewById(radio_g.getCheckedRadioButtonId());

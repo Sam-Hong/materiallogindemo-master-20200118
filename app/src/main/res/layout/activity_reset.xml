@@ -47,8 +47,8 @@
                 android:id="@+id/input_new_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:hint="New Password"
+                android:inputType="textPassword"
+                android:hint="請輸入8~10碼英數字"
                 android:textColor="@color/white" />
         </android.support.design.widget.TextInputLayout>
 
@@ -63,8 +63,8 @@
                 android:id="@+id/input_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:hint="請確認您的新密碼"
                 android:textColor="@color/white" />
         </android.support.design.widget.TextInputLayout>
 
@@ -75,7 +75,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Edit"
+            android:text="確認修改"
             android:textColor="@color/white" />
 
     </LinearLayout>
