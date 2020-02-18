@@ -178,7 +178,6 @@ public class specialshipActivity extends AppCompatActivity {
                                         listChild.add(child);
 
                                     }
-                                    Log.e("data", "onResponse: " + idList);
 
                                     Button next = findViewById(R.id.nextPage);
                                     Button prev = findViewById(R.id.prevPage);

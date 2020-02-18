@@ -119,9 +119,13 @@ public class BulletinActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
-            intent.putExtra("url", urlList.get(position));
-            startActivity(intent);
+            if (!urlList.get(position).equals("none")) {
+                Intent intent = new Intent(BulletinActivity.this, WebViewActivity.class);
+                intent.putExtra("url", urlList.get(position));
+                startActivity(intent);
+            }
+            else
+                Toast.makeText(getBaseContext(), "No PDF file", Toast.LENGTH_LONG).show();
         }
 
     };
@@ -151,11 +155,16 @@ public class BulletinActivity extends AppCompatActivity {
                                         String id = jsonObject.getString("id");
                                         String name = jsonObject.getString("title");
                                         JSONArray filePath = jsonObject.getJSONArray("files");
-                                        JSONObject path = filePath.getJSONObject(0);
-                                        String url = "https://www.cga.gov.tw" + path.getString("filePath");
+                                        String url;
+                                        if (!filePath.isNull(0) && filePath.length() == 1) {
+                                            JSONObject path = filePath.getJSONObject(0);
+                                            url = "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + path.getString("filePath");
+                                        }
+                                        else
+                                            url = "none";
                                         idList.add(id);
                                         nameList.add(name);
-                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
+                                        urlList.add(url);
                                     }
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);

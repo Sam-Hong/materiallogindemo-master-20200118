@@ -53,7 +53,7 @@ public class statisticsMenuActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener onClickListView = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.e("urlList", "onItemClick: " +urlList.get(position) );
+
             if (urlList.get(position).equals("0"))
             {
                 Intent intent = new Intent(statisticsMenuActivity.this, statisticsMenuActivity.class);
