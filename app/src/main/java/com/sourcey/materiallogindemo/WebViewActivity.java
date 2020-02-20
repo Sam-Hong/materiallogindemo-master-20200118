@@ -20,7 +20,6 @@ import android.widget.Button;
 public class WebViewActivity extends AppCompatActivity {
 
     String url;
-    int end = 0;
     CountDownTimer timer;
     @SuppressLint("SetJavaScriptEnabled")
 
@@ -40,10 +39,10 @@ public class WebViewActivity extends AppCompatActivity {
         myWebView.loadUrl(url);
         final ProgressDialog loading = new ProgressDialog(this);
         loading.setMessage("Loading please wait...");
-        timer = new CountDownTimer(10000, 1000) {
+        timer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
+                //Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
                 loading.show();
                 if (myWebView.getContentHeight() != 0) {
                     timer.cancel();
@@ -54,9 +53,9 @@ public class WebViewActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (myWebView.getContentHeight() == 0) {
-                    Log.e("reloading", "onFinish: " + url);
+                    //Log.e("reloading", "onFinish: " + url);
                     myWebView.loadUrl(url);
-                    loading.dismiss();
+                    timer.start();
                 }
             }
         };
