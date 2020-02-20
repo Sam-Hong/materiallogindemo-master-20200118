@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.sourcey.materiallogindemo.ResultActivity">
+    tools:context="com.sourcey.materiallogindemo.ResultActivity"
+    android:background="@drawable/bg">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,14 +19,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/tvres"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="31dp"
         android:textColor="#FFFFFF"
         android:textAlignment="center"
         android:textSize="18sp" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="56dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/tvres2"
@@ -39,9 +40,9 @@
         android:layout_height="wrap_content"
         android:text="回首頁"
         android:id="@+id/btnRestart"
-        android:layout_marginTop="31dp"
-        android:layout_marginBottom="119dp"
-        android:background="#01579B"
+        android:layout_marginTop="62dp"
+        android:layout_marginBottom="31dp"
+        android:background="#FF5722"
         android:textColor="#ffffff" />
 
 </LinearLayout>

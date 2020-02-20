@@ -19,7 +19,7 @@
             android:alignmentMode="alignMargins"
             android:columnCount="2"
             android:columnOrderPreserved="false"
-            android:rowCount="3">
+            android:rowCount="4">
 
             <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"

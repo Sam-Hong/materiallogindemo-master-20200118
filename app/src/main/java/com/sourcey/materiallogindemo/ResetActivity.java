@@ -140,13 +140,13 @@ public class ResetActivity extends AppCompatActivity {
 
     public void onEditSuccess() {
         _ChangePasswordButton.setEnabled(true);
-        Toast toast = Toast.makeText(this, "Password Change Success", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(this, "變更密碼成功", Toast.LENGTH_LONG);
         toast.show();
         finish();
     }
 
     public void onEditFailed() {
-        Toast.makeText(getBaseContext(), "Edit failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "變更密碼失敗", Toast.LENGTH_LONG).show();
         _ChangePasswordButton.setEnabled(true);
     }
 
@@ -157,14 +157,14 @@ public class ResetActivity extends AppCompatActivity {
         String ConfirmPassword = _ConfirmPasswordText.getText().toString();
 
         if (NewPassword.isEmpty()) {
-            _NewPasswordText.setError("enter a new password");
+            _NewPasswordText.setError("請輸入一組新密碼");
             valid = false;
         } else {
             _NewPasswordText.setError(null);
         }
 
         if (ConfirmPassword.isEmpty()) {
-            _ConfirmPasswordText.setError("enter a confirmed password");
+            _ConfirmPasswordText.setError("請再次確認新密碼");
             valid = false;
         } else {
             _ConfirmPasswordText.setError(null);

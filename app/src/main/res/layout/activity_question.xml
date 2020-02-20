@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.sourcey.materiallogindemo.QuestionActivity">
+    tools:context="com.sourcey.materiallogindemo.QuestionActivity"
+    android:background="@drawable/bg">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,13 +21,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="問題10之"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:textColor="#FFFFFF"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progress"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="24dp"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 
     <TextView
@@ -35,7 +38,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Questions"
         android:id="@+id/tvque"
-        android:layout_marginBottom="52dp" />
+        android:layout_marginBottom="52dp"
+        android:textColor="#FFFFFF"/>
 
     <RadioGroup
         android:layout_width="wrap_content"
@@ -49,25 +53,28 @@
             android:text="A"
             android:id="@+id/radioButton"
             android:checked="false"
-            />
+            android:textColor="#FFFFFF"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="B"
             android:id="@+id/radioButton2"
-            android:checked="false" />
+            android:checked="false"
+            android:textColor="#FFFFFF"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="C"
             android:id="@+id/radioButton3"
-            android:checked="false" />
+            android:checked="false"
+            android:textColor="#FFFFFF"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="D"
             android:id="@+id/radioButton4"
-            android:checked="false" />
+            android:checked="false"
+            android:textColor="#FFFFFF"/>
     </RadioGroup>
 
     <Button
@@ -76,6 +83,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:background="#FF5722"
-        android:text="Next Question"
+        android:text="下一題"
         android:textColor="#ffffff" />
 </LinearLayout>
