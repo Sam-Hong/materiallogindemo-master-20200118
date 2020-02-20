@@ -80,7 +80,7 @@ public class ServicejobActivity extends AppCompatActivity {
                                         String url = "https://www.cga.gov.tw" + jsonObject.getString("filePath");
                                         idList.add(id);
                                         nameList.add(name);
-                                        urlList.add("https://docs.google.com/gview?embedded=true&url=" + url);
+                                        urlList.add("https://drive.google.com/gview?embedded=true&url=" + url);
                                     }
                                     //找到ListView
                                     ListView list = (ListView) findViewById(R.id.listview);

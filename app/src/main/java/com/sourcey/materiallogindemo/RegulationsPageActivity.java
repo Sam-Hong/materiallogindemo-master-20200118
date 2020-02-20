@@ -53,7 +53,7 @@ public class RegulationsPageActivity extends AppCompatActivity {
             for (int x = 0; x < files.size(); x++) {
                 if (files.get(x).contains(".pdf") && !files.get(x).contains("GipOpen")){
                     firstView.add(files.get(x));
-                    url.add("http://docs.google.com/gview?embedded=true&url=http://www.cga.gov.tw" + files.get(x + 1));
+                    url.add("http://drive.google.com/gview?embedded=true&url=http://www.cga.gov.tw" + files.get(x + 1));
                 }
             }
             if (url.isEmpty())
@@ -61,7 +61,7 @@ public class RegulationsPageActivity extends AppCompatActivity {
                 for (int x = 0; x < history.length; x++)
                 {
                     if (history[x].contains(".pdf"))
-                        url.add("http://docs.google.com/gview?embedded=true&url=" + history[x]);
+                        url.add("http://drive.google.com/gview?embedded=true&url=" + history[x]);
                     if (history[x].contains("(pdf)"))
                         firstView.add("海岸巡防機關執行臺灣地區漁港及遊艇港安全檢查作業規定(pdf)");
                 }

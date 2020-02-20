@@ -100,7 +100,7 @@ public class statisticsPageActivity extends AppCompatActivity {
                                         String name = jsonObject.getString("title");
                                         String url;
                                         if (type.equals("3"))
-                                            url= "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + jsonObject.getString("filePath");
+                                            url= "https://drive.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + jsonObject.getString("filePath");
                                         else if (type.equals("2"))
                                             url = "none";
                                         else {

@@ -68,6 +68,7 @@ public class specialshipActivity extends AppCompatActivity {
             try {
                 if (query.length() == 7) {
                     int ship = Integer.parseInt(query);
+                    page = 1;
                     PostHttpRequest(true, ship);
                 }
             } catch (NumberFormatException e) {
@@ -168,7 +169,11 @@ public class specialshipActivity extends AppCompatActivity {
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String id = jsonObject.getString("number");
-                                        String name = jsonObject.getString("name");
+                                        String name;
+                                        if (jsonObject.has("name"))
+                                            name = jsonObject.getString("name");
+                                        else
+                                            name = "No name";
                                         String status = jsonObject.getString("howToDo");
                                         ArrayList<String> child = new ArrayList<String>();
 
@@ -181,14 +186,18 @@ public class specialshipActivity extends AppCompatActivity {
 
                                     Button next = findViewById(R.id.nextPage);
                                     Button prev = findViewById(R.id.prevPage);
+                                    TextView pageNumber = findViewById(R.id.pageNumber);
 
-                                    if (!pageTotal.equals("1")) {
-                                        TextView pageNumber = findViewById(R.id.pageNumber);
+                                    if (!pageTotal.equals("1") && !pageTotal.equals("0")) {
                                         pageNumber.setVisibility(View.VISIBLE);
                                         String temp = page + "/" + pageTotal;
                                         pageNumber.setText(temp);
                                     }
-                                    if (pageTotal.equals("1"))
+                                    else
+                                    {
+                                        pageNumber.setVisibility(View.INVISIBLE);
+                                    }
+                                    if (pageTotal.equals("1") || pageTotal.equals("0"))
                                     {
                                         prev.setVisibility(View.INVISIBLE);
                                         prev.setEnabled(false);
@@ -198,6 +207,8 @@ public class specialshipActivity extends AppCompatActivity {
                                     else if (page == 1){
                                         prev.setVisibility(View.INVISIBLE);
                                         prev.setEnabled(false);
+                                        if (next.getVisibility() == View.INVISIBLE)
+                                            next.setVisibility(View.VISIBLE);
                                         next.setEnabled(true);
                                     }
                                     else if (pageTotal.equals(Integer.toString(page)))
