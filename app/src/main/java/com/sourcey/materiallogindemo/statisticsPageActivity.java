@@ -198,10 +198,14 @@ public class statisticsPageActivity extends AppCompatActivity {
                         return -1;
                     }
                 }
+                if (o1.length() > o2.length())
+                    return 1;
+                else if (o1.length() < o2.length())
+                    return -1;
                 if (m.hitEnd() && m2.hitEnd())
                     return 0;
                 else
-                    return 1;
+                    return -1;
             }
         });
 
