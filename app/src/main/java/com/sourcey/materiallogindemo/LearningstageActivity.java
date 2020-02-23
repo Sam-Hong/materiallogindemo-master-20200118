@@ -64,7 +64,8 @@ public class LearningstageActivity extends AppCompatActivity {
                 intent.putExtra("parentId", "18");
                 startActivity(intent);
             } else if (position==4){
-
+                Intent intent = new Intent(LearningstageActivity.this, ReportActivity.class);
+                startActivity(intent);
             }
         }
 
