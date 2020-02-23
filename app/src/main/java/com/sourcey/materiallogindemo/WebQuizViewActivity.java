@@ -1,6 +1,7 @@
 package com.sourcey.materiallogindemo;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,6 +21,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
     int time_to_quiz;
     String materialId;
     Button start_quiz;
+    CountDownTimer timer;
 
     @SuppressLint("SetJavaScriptEnabled")
 
@@ -44,12 +46,36 @@ public class WebQuizViewActivity extends AppCompatActivity {
             }
         });
 
-        WebView myWebView = (WebView) findViewById(R.id.web_view);
+        final WebView myWebView = (WebView) findViewById(R.id.web_view);
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         myWebView.setWebViewClient(new WebViewClient());
 //        setContentView(myWebView);
         myWebView.loadUrl(url);
+
+        final ProgressDialog loading = new ProgressDialog(this);
+        loading.setMessage("載入中,請稍後...");
+        timer = new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                //Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
+                loading.show();
+                if (myWebView.getContentHeight() != 0) {
+                    timer.cancel();
+                    loading.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (myWebView.getContentHeight() == 0) {
+                    //Log.e("reloading", "onFinish: " + url);
+                    myWebView.loadUrl(url);
+                    timer.start();
+                }
+            }
+        };
+        timer.start();
     }
 
     public void setButtonTimer(int time){

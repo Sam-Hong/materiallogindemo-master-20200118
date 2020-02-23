@@ -37,6 +37,8 @@ public class ReportActivity extends AppCompatActivity {
     ArrayList<ArrayList<String>> listChild = new ArrayList<ArrayList<String>>();
     int page = 1;
     int totaltime=0;
+    String WhenToPass = "測驗通過時間：";
+    String LearningTime = "學習時數(分鐘)：";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,9 @@ public class ReportActivity extends AppCompatActivity {
 
         CountTime();
         PostHttpRequest();
+
+        Button downloadPDF = findViewById(R.id.DownloadPDF);
+        downloadPDF.setVisibility(View.INVISIBLE);
     }
 
     private void CountTime(){
@@ -193,8 +198,10 @@ public class ReportActivity extends AppCompatActivity {
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String name = jsonObject.getString("materialName");
-                                        String when = jsonObject.getString("timestamp");
-                                        String time = jsonObject.getString("minutes");
+                                        String when = WhenToPass;
+                                        when += jsonObject.getString("timestamp");
+                                        String time = LearningTime;
+                                        time += jsonObject.getString("minutes");
                                         ArrayList<String> child = new ArrayList<String>();
                                         idList.add(name);
                                         child.add(when);
@@ -205,10 +212,6 @@ public class ReportActivity extends AppCompatActivity {
                                     Button next = findViewById(R.id.nextPage);
                                     Button prev = findViewById(R.id.prevPage);
                                     TextView pageNumber = findViewById(R.id.pageNumber);
-
-                                    TextView totalLearningTime = findViewById(R.id.TotalLearningTime);
-                                    String tmp = "總學習時數合計 " + totaltime + " 分鐘";
-                                    totalLearningTime.setText(tmp);
 
                                     if (!pageTotal.equals("1") && !pageTotal.equals("0")) {
                                         pageNumber.setVisibility(View.VISIBLE);

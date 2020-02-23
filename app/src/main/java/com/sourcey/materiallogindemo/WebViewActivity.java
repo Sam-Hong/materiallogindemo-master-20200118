@@ -32,14 +32,14 @@ public class WebViewActivity extends AppCompatActivity {
         url = intent.getStringExtra("url");
 
         final WebView myWebView = (WebView) findViewById(R.id.web_view);
-
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         myWebView.setWebViewClient(new WebViewClient());
         myWebView.loadUrl(url);
+
         final ProgressDialog loading = new ProgressDialog(this);
-        loading.setMessage("Loading please wait...");
-        timer = new CountDownTimer(6000, 1000) {
+        loading.setMessage("載入中,請稍後...");
+        timer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 //Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
