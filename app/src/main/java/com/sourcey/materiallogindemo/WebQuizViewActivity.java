@@ -15,6 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class WebQuizViewActivity extends AppCompatActivity {
 
     String url;
@@ -22,6 +25,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
     String materialId;
     Button start_quiz;
     CountDownTimer timer;
+    private Timer autoLogoutTimer;
 
     @SuppressLint("SetJavaScriptEnabled")
 
@@ -76,6 +80,39 @@ public class WebQuizViewActivity extends AppCompatActivity {
             }
         };
         timer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        autoLogoutTimer = new Timer();
+        Log.i("Main", "Invoking logout timer");
+        LogOutTimerTask logoutTimeTask = new LogOutTimerTask();
+        autoLogoutTimer.schedule(logoutTimeTask, 300000); //auto logout in 5 minutes
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (autoLogoutTimer != null) {
+            autoLogoutTimer.cancel();
+            Log.i("Main", "cancel timer");
+            autoLogoutTimer = null;
+        }
+    }
+
+    private class LogOutTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            //redirect user to login screen
+            Intent i = new Intent(WebQuizViewActivity.this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            GlobalVariable gv = (GlobalVariable) getApplicationContext();
+            gv.setLoginToken(false);
+            startActivity(i);
+            finish();
+        }
     }
 
     public void setButtonTimer(int time){
