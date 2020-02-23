@@ -34,7 +34,7 @@ public class statisticsMenuActivity extends AppCompatActivity {
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
     ArrayList<String> otherUrl = new ArrayList<String>();
-    String parentId = "8755";
+    String parentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -181,7 +181,7 @@ public class BulletinActivity extends AppCompatActivity {
                                         if (!filePath.isNull(0) && filePath.length() == 1) {
                                             JSONObject path = filePath.getJSONObject(0);
 
-                                            url = "https://docs.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + path.getString("filePath");
+                                            url = "https://drive.google.com/gview?embedded=true&url=https://www.cga.gov.tw" + path.getString("filePath");
                                         }
                                         else {
                                             url = "none";

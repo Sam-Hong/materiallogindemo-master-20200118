@@ -1,10 +1,14 @@
 package com.sourcey.materiallogindemo;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +20,7 @@ import android.widget.Button;
 public class WebViewActivity extends AppCompatActivity {
 
     String url;
-
+    CountDownTimer timer;
     @SuppressLint("SetJavaScriptEnabled")
 
     @Override
@@ -27,12 +31,42 @@ public class WebViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
 
-        WebView myWebView = (WebView) findViewById(R.id.web_view);
+        final WebView myWebView = (WebView) findViewById(R.id.web_view);
+
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         myWebView.setWebViewClient(new WebViewClient());
-//        setContentView(myWebView);
         myWebView.loadUrl(url);
+        final ProgressDialog loading = new ProgressDialog(this);
+        loading.setMessage("Loading please wait...");
+        timer = new CountDownTimer(6000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                //Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
+                loading.show();
+                if (myWebView.getContentHeight() != 0) {
+                    timer.cancel();
+                    loading.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (myWebView.getContentHeight() == 0) {
+                    //Log.e("reloading", "onFinish: " + url);
+                    myWebView.loadUrl(url);
+                    timer.start();
+                }
+            }
+        };
+        timer.start();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        timer.cancel();
     }
 
     @Override
