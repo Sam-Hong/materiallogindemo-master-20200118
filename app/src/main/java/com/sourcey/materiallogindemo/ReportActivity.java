@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,14 +35,13 @@ public class ReportActivity extends AppCompatActivity {
 
     String authorization, pageTotal;
     RequestQueue requestQueue;
-    Context context;
     static final String REQ_TAG = "VACTIVITY";
-    ArrayList<String> idList = new ArrayList<String>();
-    ArrayList<ArrayList<String>> listChild = new ArrayList<ArrayList<String>>();
     int page = 1;
     int totaltime=0;
-    String WhenToPass = "測驗通過時間：";
-    String LearningTime = "學習時數(分鐘)：";
+    Context context;
+    String WhenToPass = "測驗通過時間";
+    String LearningTime = "學習時數(分鐘)";
+    TableLayout reportTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class ReportActivity extends AppCompatActivity {
                 .getRequestQueue();
         context = this;
 
+        reportTable = findViewById(R.id.reportTable);
         CountTime();
         PostHttpRequest();
 
@@ -187,10 +191,26 @@ public class ReportActivity extends AppCompatActivity {
                             //Log.e("here", response.toString());
                             if (response.getString("data").length() > 0) {
                                 try {
-                                    if (!idList.isEmpty() && !listChild.isEmpty())
+                                    if (!reportTable.toString().isEmpty())
                                     {
-                                        idList.clear();
-                                        listChild.clear();
+                                        reportTable.removeAllViews();
+                                        TableRow row = new TableRow(context);
+
+                                        TextView firstCol = new TextView(context);
+                                        TextView secondCol = new TextView(context);
+                                        TextView thirdCol = new TextView(context);
+
+                                        firstCol.setText(" ");
+                                        firstCol.setTextColor(getResources().getColor(R.color.white));
+                                        secondCol.setText(WhenToPass);
+                                        secondCol.setTextColor(getResources().getColor(R.color.white));
+                                        thirdCol.setText(LearningTime);
+                                        thirdCol.setTextColor(getResources().getColor(R.color.white));
+
+                                        row.addView(firstCol);
+                                        row.addView(secondCol);
+                                        row.addView(thirdCol);
+                                        reportTable.addView(row, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                                     }
                                     JSONObject data = response.getJSONObject("data");
                                     pageTotal = data.get("totalPage").toString();
@@ -198,15 +218,31 @@ public class ReportActivity extends AppCompatActivity {
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject jsonObject = array.getJSONObject(i);
                                         String name = jsonObject.getString("materialName");
-                                        String when = WhenToPass;
-                                        when += jsonObject.getString("timestamp");
-                                        String time = LearningTime;
-                                        time += jsonObject.getString("minutes");
-                                        ArrayList<String> child = new ArrayList<String>();
-                                        idList.add(name);
-                                        child.add(when);
-                                        child.add(time);
-                                        listChild.add(child);
+                                        String when = jsonObject.getString("timestamp");
+                                        String time = jsonObject.getString("minutes");
+
+                                        TableRow row = new TableRow(context);
+
+                                        TextView firstCol = new TextView(context);
+                                        TextView secondCol = new TextView(context);
+                                        TextView thirdCol = new TextView(context);
+
+                                        firstCol.setText(name);
+                                        firstCol.setTextColor(getResources().getColor(R.color.white));
+                                        firstCol.setMaxWidth(200);
+                                        firstCol.setPadding(20,1,1,1);
+
+                                        secondCol.setText(when);
+                                        secondCol.setTextColor(getResources().getColor(R.color.white));
+
+                                        thirdCol.setText(time);
+                                        thirdCol.setTextColor(getResources().getColor(R.color.white));
+                                        thirdCol.setGravity(Gravity.CENTER);
+
+                                        row.addView(firstCol);
+                                        row.addView(secondCol);
+                                        row.addView(thirdCol);
+                                        reportTable.addView(row);
                                     }
 
                                     Button next = findViewById(R.id.nextPage);
@@ -245,10 +281,6 @@ public class ReportActivity extends AppCompatActivity {
 
                                     prev.setOnClickListener(onClickButton);
                                     next.setOnClickListener(onClickButton);
-
-                                    specialAdapter listAdapter = new specialAdapter(context, idList, listChild);
-                                    ExpandableListView expListView = findViewById(R.id.ImoList);
-                                    expListView.setAdapter(listAdapter);
 
                                 } catch (Exception e) {
                                     Toast.makeText(getBaseContext(), "response error", Toast.LENGTH_LONG).show();

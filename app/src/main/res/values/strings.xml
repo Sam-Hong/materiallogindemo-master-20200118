@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Cga</string>
-
     <string name="home">首頁</string>
     <string name="logout">登出</string>
-
     <string name="regulations">海巡法規</string>
     <string name="bulletin">射擊通報</string>
     <string name="statistics">海巡統計</string>
@@ -18,7 +16,11 @@
     <string name="download">檔案下載</string>
     <string name="next">下一頁</string>
     <string name="previous">上一頁</string>
-
+    <string name="start_quiz">開始學後評量</string>
+    <string name="quiz">學後評量</string>
+    <string name="imo">IMO碼</string>
+    <string name="imo_hint">IMO編號</string>
+    <string name="PdfDownload">下載PDF</string>
 
     <string name="login_api_url">http://www.cga.gov.tw/CgaSearchZone/api/common/login</string>
     <string name="feature_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/find/features/by/parent</string>
@@ -33,11 +35,7 @@
     <string name="reset_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/password/reset</string>
     <string name="question_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/find/questions/list</string>
     <string name="save_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/save</string>
-    <string name="imo">IMO碼</string>
-    <string name="imo_hint">IMO編號</string>
     <string name="report_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/report/page</string>
     <string name="report_all_api_url">http://www.cga.gov.tw/CgaSearchZone/api/user/learning/report/all</string>
 
-    <string name="start_quiz">開始學後評量</string>
-    <string name="quiz">學後評量</string>
 </resources>
