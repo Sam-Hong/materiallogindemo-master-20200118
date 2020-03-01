@@ -200,8 +200,9 @@ public class ReportActivity extends AppCompatActivity {
                                         TextView secondCol = new TextView(context);
                                         TextView thirdCol = new TextView(context);
 
-                                        firstCol.setText(" ");
+                                        firstCol.setText("科目名稱");
                                         firstCol.setTextColor(getResources().getColor(R.color.white));
+                                        firstCol.setPadding(10,0,0,0);
                                         secondCol.setText(WhenToPass);
                                         secondCol.setTextColor(getResources().getColor(R.color.white));
                                         thirdCol.setText(LearningTime);
@@ -210,7 +211,7 @@ public class ReportActivity extends AppCompatActivity {
                                         row.addView(firstCol);
                                         row.addView(secondCol);
                                         row.addView(thirdCol);
-                                        reportTable.addView(row, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                        reportTable.addView(row);
                                     }
                                     JSONObject data = response.getJSONObject("data");
                                     pageTotal = data.get("totalPage").toString();
@@ -230,7 +231,7 @@ public class ReportActivity extends AppCompatActivity {
                                         firstCol.setText(name);
                                         firstCol.setTextColor(getResources().getColor(R.color.white));
                                         firstCol.setMaxWidth(200);
-                                        firstCol.setPadding(20,1,1,1);
+                                        firstCol.setPadding(20,10,0,0);
 
                                         secondCol.setText(when);
                                         secondCol.setTextColor(getResources().getColor(R.color.white));
