@@ -33,6 +33,7 @@ public class LearningfeatureActivity extends AppCompatActivity {
     ArrayList<String> idList = new ArrayList<String>();
     ArrayList<String> nameList = new ArrayList<String>();
     ArrayList<String> urlList = new ArrayList<String>();
+    ArrayList<String> durationList = new ArrayList<>();
     int parentID;
 
     @Override
@@ -59,7 +60,7 @@ public class LearningfeatureActivity extends AppCompatActivity {
             if (parentID==15 && position==2){
                 Intent intent = new Intent(LearningfeatureActivity.this, ImageViewActivity.class);
                 startActivity(intent);
-            } else if (parentID==15&&(position==3||position==4||position==5||position==6||position==8)){
+            } else if (parentID==15&&(position==3||position==4||position==5||position==6||position==8||position==9)){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
                 startActivity(intent);
@@ -70,76 +71,76 @@ public class LearningfeatureActivity extends AppCompatActivity {
             } else if (parentID==14&&position==0){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(1));
                 startActivity(intent);
             } else if (parentID==14&&position==1){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(2));
                 startActivity(intent);
             } else if (parentID==14&&position==2){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(3));
                 startActivity(intent);
             } else if (parentID==14&&position==3){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(4));
                 startActivity(intent);
             } else if (parentID==15&&position==0){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(5));
                 startActivity(intent);
             } else if (parentID==15&&position==1){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(6));
                 startActivity(intent);
             } else if (parentID==15&&position==7){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(12));
                 startActivity(intent);
             } else if (parentID==16&&position==0){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(14));
                 startActivity(intent);
             } else if (parentID==18&&position==0){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(16));
                 startActivity(intent);
             }
             else if (parentID==18&&position==1){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(17));
                 startActivity(intent);
             }
             else if (parentID==18&&position==2){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(18));
                 startActivity(intent);
             }
             else if (parentID==18&&position==3){
                 Intent intent = new Intent(LearningfeatureActivity.this, WebQuizViewActivity.class);
                 intent.putExtra("url", urlList.get(position));
-                intent.putExtra("time_to_quiz", "3000");
+                intent.putExtra("time_to_quiz", durationList.get(position));
                 intent.putExtra("materialId",Integer.toString(19));
                 startActivity(intent);
             }
@@ -170,8 +171,19 @@ public class LearningfeatureActivity extends AppCompatActivity {
                                         String url = jsonObject.getString("url");
                                         if (url.contains("https")) {
                                             String[] temp = url.split("\"");
-                                            url = temp[1];
+                                            for(String x : temp)
+                                            {
+                                                if (x.contains("https"))
+                                                    url = x;
+                                            }
                                         }
+                                        if (jsonObject.getString("hasQuestions").equals("1"))
+                                        {
+                                            String time = jsonObject.getString("confirmDuration");
+                                            durationList.add(time);
+                                        }
+                                        else
+                                            durationList.add("none");
                                         idList.add(id);
                                         nameList.add(name);
                                         urlList.add(url);

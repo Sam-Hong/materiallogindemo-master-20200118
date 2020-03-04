@@ -31,15 +31,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ExpandableListView
-            android:id="@+id/ImoList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/prevPage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TotalLearningTime" />
-
         <Button
             android:id="@+id/prevPage"
             android:layout_width="wrap_content"
@@ -70,12 +61,20 @@
             android:id="@+id/pageNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/nextPage"
-            app:layout_constraintStart_toEndOf="@+id/prevPage"
-            app:layout_constraintTop_toBottomOf="@+id/ImoList" />
+            app:layout_constraintStart_toEndOf="@+id/prevPage" />
+
+        <TableLayout
+            android:id="@+id/reportTable"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/prevPage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/DownloadPDF" />
 
 </android.support.constraint.ConstraintLayout>

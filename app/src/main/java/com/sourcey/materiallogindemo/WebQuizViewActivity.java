@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
     int time_to_quiz;
     String materialId;
     Button start_quiz;
-    CountDownTimer timer;
+    CountDownTimer timer, quizTimer;
     private Timer autoLogoutTimer;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -37,10 +38,11 @@ public class WebQuizViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         time_to_quiz = Integer.parseInt(intent.getStringExtra("time_to_quiz"));
+        Log.e("duration for time", "onCreate: " + time_to_quiz );
         materialId=intent.getStringExtra("materialId");
 
         start_quiz = (Button) findViewById(R.id.start_quiz);
-        setButtonTimer(time_to_quiz);
+        start_quiz.setVisibility(View.INVISIBLE);
         start_quiz.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +59,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
 //        setContentView(myWebView);
         myWebView.loadUrl(url);
 
+        quizTimer = setButtonTimer(time_to_quiz);
         final ProgressDialog loading = new ProgressDialog(this);
         loading.setMessage("載入中,請稍後...");
         timer = new CountDownTimer(5000, 1000) {
@@ -65,7 +68,7 @@ public class WebQuizViewActivity extends AppCompatActivity {
                 //Log.e("countdown", "onTick: " + millisUntilFinished / 1000 );
                 loading.show();
                 if (myWebView.getContentHeight() != 0) {
-                    timer.cancel();
+                    timer.onFinish();
                     loading.dismiss();
                 }
             }
@@ -77,6 +80,8 @@ public class WebQuizViewActivity extends AppCompatActivity {
                     myWebView.loadUrl(url);
                     timer.start();
                 }
+                else
+                    quizTimer.start();
             }
         };
         timer.start();
@@ -115,16 +120,25 @@ public class WebQuizViewActivity extends AppCompatActivity {
         }
     }
 
-    public void setButtonTimer(int time){
-        start_quiz.setVisibility(View.INVISIBLE);
-        new CountDownTimer(time, 1000) {
+    public CountDownTimer setButtonTimer(int time){
+        return new CountDownTimer(time, 1000) {
             public void onTick(long millisUntilFinished) {
+                //Log.e("buttonTimer", "onTick: " + millisUntilFinished / 1000 );
             }
+
             @Override
             public void onFinish() {
                 start_quiz.setVisibility(View.VISIBLE);
             }
-        }.start();
+        };
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            quizTimer.cancel();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
